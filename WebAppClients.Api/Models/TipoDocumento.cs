@@ -8,4 +8,5 @@ public enum TipoDocumento
     LicenciaConducir,
     CartillaMilitar,
     INE,
+    Otro,
 }
