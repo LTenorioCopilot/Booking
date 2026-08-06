@@ -6,4 +6,5 @@ public enum TipoDocumento
     Pasaporte,
     CE,
     LicenciaConducir,
+    CartillaMilitar,
 }
