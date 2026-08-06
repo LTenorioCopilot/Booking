@@ -2,6 +2,8 @@ name: Build and Package NuGet
 
 on:
   push:
+    branches:
+      - main
     paths:
       - 'WebAppClients.Api/**'
       - '.github/workflows/build-nuget.yml'
