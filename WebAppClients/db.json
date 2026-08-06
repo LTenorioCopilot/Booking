@@ -1,0 +1,26 @@
+{
+  "clientes": [
+    {
+      "id": 1,
+      "nombres": "María",
+      "apellidos": "Gómez Rivera",
+      "tipoDocumento": "DNI",
+      "numeroDocumento": "45678912",
+      "fechaNacimiento": "1990-04-12",
+      "email": "maria.gomez@example.com",
+      "telefono": "999888777",
+      "direccion": "Av. Los Álamos 123, Lima"
+    },
+    {
+      "id": 2,
+      "nombres": "Carlos",
+      "apellidos": "Fernández Luna",
+      "tipoDocumento": "Pasaporte",
+      "numeroDocumento": "PA1234567",
+      "fechaNacimiento": "1985-11-02",
+      "email": "carlos.fernandez@example.com",
+      "telefono": "988777666",
+      "direccion": "Calle Las Palmeras 456, Arequipa"
+    }
+  ]
+}
