@@ -18,11 +18,13 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ClientesDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("ClientesDb")));
 
+var allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() ?? [];
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(FrontendCorsPolicy, policy =>
     {
-        policy.WithOrigins("http://localhost:5173")
+        policy.WithOrigins(allowedOrigins)
             .AllowAnyHeader()
             .AllowAnyMethod();
     });
@@ -43,5 +45,11 @@ app.UseCors(FrontendCorsPolicy);
 app.UseAuthorization();
 
 app.MapControllers();
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<ClientesDbContext>();
+    db.Database.Migrate();
+}
 
 app.Run();
