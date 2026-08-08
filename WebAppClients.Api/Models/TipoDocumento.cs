@@ -4,9 +4,5 @@ public enum TipoDocumento
 {
     DNI,
     Pasaporte,
-    CE,
-    LicenciaConducir,
-    CartillaMilitar,
-    INE,
-    Otro,
+    CE
 }

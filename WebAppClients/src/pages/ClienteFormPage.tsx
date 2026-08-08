@@ -32,6 +32,15 @@ export function ClienteFormPage() {
 
   return (
     <div className="p-6">
+      <div className="mx-auto mb-6 flex max-w-2xl items-center">
+        <button
+          type="button"
+          onClick={() => navigate('/clientes')}
+          className="text-sm font-medium text-indigo-600 hover:underline"
+        >
+          ← Regresar
+        </button>
+      </div>
       <h1 className="mb-6 text-center text-2xl font-semibold text-slate-900 dark:text-white">
         {esEdicion ? 'Editar cliente' : 'Nuevo cliente'}
       </h1>
