@@ -1,14 +1,20 @@
-import { Navigate, Route, Routes } from 'react-router-dom'
-import { ClientesListPage } from './pages/ClientesListPage'
-import { ClienteFormPage } from './pages/ClienteFormPage'
+import { Route, Routes } from 'react-router-dom'
+import { MainLayout } from './layouts/MainLayout'
+import { HomePage } from './pages/HomePage'
+import { CustomersListPage } from './pages/CustomersListPage'
+import { CustomerFormPage } from './pages/CustomerFormPage'
+import { Reservations } from './pages/Reservations'
 
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<Navigate to="/clientes" replace />} />
-      <Route path="/clientes" element={<ClientesListPage />} />
-      <Route path="/clientes/nuevo" element={<ClienteFormPage />} />
-      <Route path="/clientes/:id/editar" element={<ClienteFormPage />} />
+      <Route element={<MainLayout />}>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/customers" element={<CustomersListPage />} />
+        <Route path="/customers/nuevo" element={<CustomerFormPage />} />
+        <Route path="/customers/:id/editar" element={<CustomerFormPage />} />
+        <Route path="/reservas" element={<Reservations />} />
+      </Route>
     </Routes>
   )
 }

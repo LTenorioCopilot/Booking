@@ -11,7 +11,7 @@ using WebAppClients.Api.Data;
 
 namespace WebAppClients.Api.Migrations
 {
-    [DbContext(typeof(ClientesDbContext))]
+    [DbContext(typeof(CustomersDbContext))]
     [Migration("20260731140944_InitialCreate")]
     partial class InitialCreate
     {
