@@ -74,9 +74,12 @@ const STATUS_LABELS: Record<ReservationStatus, string> = {
 }
 
 const STATUS_STYLES: Record<ReservationStatus, string> = {
-  Confirmed: 'border-indigo-500 bg-indigo-600 text-white',
-  CheckedIn: 'border-emerald-500 bg-emerald-600 text-white',
-  Pending: 'border-amber-400 bg-amber-500 text-white',
+  Confirmed:
+    'border-green-400/60 bg-green-500/15 text-green-700 dark:border-green-500/40 dark:bg-green-500/20 dark:text-green-300',
+  CheckedIn:
+    'border-blue-400/60 bg-blue-500/15 text-blue-700 dark:border-blue-500/40 dark:bg-blue-500/20 dark:text-blue-300',
+  Pending:
+    'border-amber-400/60 bg-amber-500/15 text-amber-700 dark:border-amber-500/40 dark:bg-amber-500/20 dark:text-amber-300',
 }
 
 function toReservation(booking: Booking & { roomId: string }): Reservation {
