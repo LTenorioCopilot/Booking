@@ -4,3 +4,5 @@ export interface Room {
   type: string
   capacity: number
 }
+
+export type RoomInput = Room

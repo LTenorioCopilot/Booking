@@ -21,6 +21,9 @@ export function MainLayout() {
           <NavLink to="/customers" className={navLinkClass}>
             Clientes
           </NavLink>
+          <NavLink to="/rooms" className={navLinkClass}>
+            Habitaciones
+          </NavLink>
           <NavLink to="/reservas" className={navLinkClass}>
             Reservaciones
           </NavLink>
