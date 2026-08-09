@@ -1,14 +1,10 @@
-import { Fragment, useState, type FormEvent } from 'react'
+import { Fragment, useMemo, useState, type FormEvent } from 'react'
+import { useBookings, useCrearBooking, useActualizarBooking, useEliminarBooking } from '../hooks/useBookings'
+import { useRooms } from '../hooks/useRooms'
+import type { Booking, BookingStatus } from '../types/booking'
 
-type ReservationStatus = 'confirmed' | 'checked-in' | 'pending'
+type ReservationStatus = BookingStatus
 type ViewMode = 'hours' | 'days'
-
-interface Room {
-  id: string
-  name: string
-  type: string
-  capacity: number
-}
 
 interface Reservation {
   id: string
@@ -71,66 +67,41 @@ function formatDay(dateISO: string) {
 
 const TODAY = toISODate(new Date())
 
-const INITIAL_ROOMS: Room[] = [
-  { id: '101', name: 'Habitación 101', type: 'Sencilla', capacity: 2 },
-  { id: '102', name: 'Habitación 102', type: 'Doble', capacity: 4 },
-  { id: '201', name: 'Suite 201', type: 'Suite Delux', capacity: 3 },
-  { id: '202', name: 'Suite 202', type: 'Suite Presidencial', capacity: 5 },
-]
-
-const INITIAL_RESERVATIONS: Reservation[] = [
-  {
-    id: 'r1',
-    roomId: '101',
-    guest: 'Ana Martínez',
-    status: 'confirmed',
-    startHour: 9,
-    endHour: 12.5,
-    checkIn: TODAY,
-    checkOut: addDays(TODAY, 1),
-  },
-  {
-    id: 'r2',
-    roomId: '102',
-    guest: 'Roberto Gómez',
-    status: 'checked-in',
-    startHour: 11,
-    endHour: 16,
-    checkIn: TODAY,
-    checkOut: addDays(TODAY, 2),
-  },
-  {
-    id: 'r3',
-    roomId: '201',
-    guest: 'Laura Torrez',
-    status: 'pending',
-    startHour: 14,
-    endHour: 18.5,
-    checkIn: TODAY,
-    checkOut: addDays(TODAY, 4),
-  },
-  {
-    id: 'r4',
-    roomId: '201',
-    guest: 'Nuevo Huésped',
-    status: 'pending',
-    startHour: 15,
-    endHour: END_HOUR,
-    checkIn: '2026-08-09',
-    checkOut: '2026-08-12',
-  },
-]
-
 const STATUS_LABELS: Record<ReservationStatus, string> = {
-  confirmed: 'Confirmada',
-  'checked-in': 'Check-in',
-  pending: 'Pendiente',
+  Confirmed: 'Confirmada',
+  CheckedIn: 'Check-in',
+  Pending: 'Pendiente',
 }
 
 const STATUS_STYLES: Record<ReservationStatus, string> = {
-  confirmed: 'border-indigo-500 bg-indigo-600 text-white',
-  'checked-in': 'border-emerald-500 bg-emerald-600 text-white',
-  pending: 'border-amber-400 bg-amber-500 text-white',
+  Confirmed: 'border-indigo-500 bg-indigo-600 text-white',
+  CheckedIn: 'border-emerald-500 bg-emerald-600 text-white',
+  Pending: 'border-amber-400 bg-amber-500 text-white',
+}
+
+function toReservation(booking: Booking): Reservation {
+  return {
+    id: String(booking.id),
+    roomId: booking.roomId,
+    guest: booking.guestName,
+    status: booking.status,
+    startHour: booking.startHour,
+    endHour: booking.endHour,
+    checkIn: booking.checkInDate,
+    checkOut: booking.checkOutDate,
+  }
+}
+
+function toBookingInput(draft: Draft) {
+  return {
+    roomId: draft.roomId,
+    guestName: draft.guest,
+    status: draft.status,
+    startHour: draft.startHour,
+    endHour: draft.endHour,
+    checkInDate: draft.checkIn,
+    checkOutDate: draft.checkOut,
+  }
 }
 
 function formatHour(hour: number) {
@@ -177,8 +148,15 @@ function hasDateOverlap(reservations: Reservation[], roomId: string, checkIn: st
 }
 
 export function Reservations() {
-  const [rooms] = useState<Room[]>(INITIAL_ROOMS)
-  const [reservations, setReservations] = useState<Reservation[]>(INITIAL_RESERVATIONS)
+  const { data: roomsData, isLoading: roomsLoading, isError: roomsError } = useRooms()
+  const rooms = roomsData ?? []
+  const { data: bookings, isLoading: bookingsLoading, isError: bookingsError } = useBookings()
+  const crearBooking = useCrearBooking()
+  const actualizarBooking = useActualizarBooking()
+  const eliminarBooking = useEliminarBooking()
+  const reservations = useMemo(() => (bookings ?? []).map(toReservation), [bookings])
+  const isLoading = roomsLoading || bookingsLoading
+  const isError = roomsError || bookingsError
   const [view, setView] = useState<ViewMode>('hours')
   const [hourViewDate, setHourViewDate] = useState(TODAY)
   const [dayViewStart, setDayViewStart] = useState(TODAY)
@@ -198,7 +176,7 @@ export function Reservations() {
     setDraft({
       roomId,
       guest: '',
-      status: 'pending',
+      status: 'Pending',
       startHour,
       endHour: Math.min(startHour + 2, END_HOUR),
       checkIn: hourViewDate,
@@ -211,7 +189,7 @@ export function Reservations() {
     setDraft({
       roomId,
       guest: '',
-      status: 'pending',
+      status: 'Pending',
       startHour: START_HOUR,
       endHour: START_HOUR + 2,
       checkIn,
@@ -239,7 +217,7 @@ export function Reservations() {
     })
   }
 
-  const handleSaveReservation = (e: FormEvent<HTMLFormElement>) => {
+  const handleSaveReservation = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (!draft) return
 
@@ -259,25 +237,44 @@ export function Reservations() {
       return
     }
 
-    const payload = { ...draft, guest: draft.guest.trim() }
+    const payload = toBookingInput({ ...draft, guest: draft.guest.trim() })
 
-    if (draft.id) {
-      setReservations((prev) => prev.map((r) => (r.id === draft.id ? { ...r, ...payload, id: r.id } : r)))
-    } else {
-      setReservations((prev) => [...prev, { ...payload, id: `r-${Date.now()}` }])
+    try {
+      if (draft.id) {
+        await actualizarBooking.mutateAsync({ id: Number(draft.id), booking: payload })
+      } else {
+        await crearBooking.mutateAsync(payload)
+      }
+      setDraft(null)
+      setError(null)
+    } catch {
+      setError('No se pudo guardar la reserva. Intenta nuevamente.')
     }
-
-    setDraft(null)
-    setError(null)
   }
 
-  const handleCancelReservation = (id: string) => {
-    setReservations((prev) => prev.filter((r) => r.id !== id))
-    setSelectedReservation(null)
+  const handleCancelReservation = async (id: string) => {
+    try {
+      await eliminarBooking.mutateAsync(Number(id))
+      setSelectedReservation(null)
+    } catch {
+      setError('No se pudo cancelar la reserva. Intenta nuevamente.')
+    }
   }
 
   const visibleDays = Array.from({ length: DAY_WINDOW }, (_, i) => addDays(dayViewStart, i))
   const selectedHourBlock = selectedReservation ? getHourBlock(selectedReservation, hourViewDate) : null
+
+  if (isLoading) {
+    return <div className="mx-auto max-w-7xl p-6 text-sm text-slate-500 dark:text-slate-400">Cargando reservaciones…</div>
+  }
+
+  if (isError) {
+    return (
+      <div className="mx-auto max-w-7xl p-6 text-sm text-red-600">
+        No se pudieron cargar las reservaciones. Verifica que la API esté disponible.
+      </div>
+    )
+  }
 
   return (
     <div className="mx-auto max-w-7xl p-6">
