@@ -79,7 +79,7 @@ const STATUS_STYLES: Record<ReservationStatus, string> = {
   Pending: 'border-amber-400 bg-amber-500 text-white',
 }
 
-function toReservation(booking: Booking): Reservation {
+function toReservation(booking: Booking & { roomId: string }): Reservation {
   return {
     id: String(booking.id),
     roomId: booking.roomId,
@@ -95,6 +95,7 @@ function toReservation(booking: Booking): Reservation {
 function toBookingInput(draft: Draft) {
   return {
     roomId: draft.roomId,
+    roomType: null,
     guestName: draft.guest,
     status: draft.status,
     startHour: draft.startHour,
@@ -154,7 +155,10 @@ export function Reservations() {
   const crearBooking = useCrearBooking()
   const actualizarBooking = useActualizarBooking()
   const eliminarBooking = useEliminarBooking()
-  const reservations = useMemo(() => (bookings ?? []).map(toReservation), [bookings])
+  const reservations = useMemo(
+    () => (bookings ?? []).filter((b): b is Booking & { roomId: string } => b.roomId !== null).map(toReservation),
+    [bookings],
+  )
   const isLoading = roomsLoading || bookingsLoading
   const isError = roomsError || bookingsError
   const [view, setView] = useState<ViewMode>('hours')

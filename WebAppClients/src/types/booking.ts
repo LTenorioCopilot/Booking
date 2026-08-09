@@ -2,7 +2,8 @@ export type BookingStatus = 'Pending' | 'Confirmed' | 'CheckedIn'
 
 export interface Booking {
   id: number
-  roomId: string
+  roomId: string | null
+  roomType: string | null
   guestName: string
   status: BookingStatus
   startHour: number

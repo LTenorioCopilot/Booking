@@ -27,6 +27,9 @@ export function MainLayout() {
           <NavLink to="/reservas" className={navLinkClass}>
             Reservaciones
           </NavLink>
+          <NavLink to="/reservas-sin-asignar" className={navLinkClass}>
+            Sin asignar
+          </NavLink>
         </nav>
       </aside>
 

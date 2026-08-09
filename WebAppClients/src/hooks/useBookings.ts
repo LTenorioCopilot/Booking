@@ -11,6 +11,14 @@ export function useBookings() {
   })
 }
 
+export function useBooking(id: number | undefined) {
+  return useQuery({
+    queryKey: [...BOOKINGS_KEY, id],
+    queryFn: () => bookingApi.obtener(id as number),
+    enabled: id !== undefined,
+  })
+}
+
 export function useCrearBooking() {
   const queryClient = useQueryClient()
   return useMutation({

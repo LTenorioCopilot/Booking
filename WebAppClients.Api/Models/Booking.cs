@@ -6,8 +6,11 @@ public class Booking
 {
     public int Id { get; set; }
 
-    [Required, MaxLength(20)]
-    public string RoomId { get; set; } = string.Empty;
+    [MaxLength(20)]
+    public string? RoomId { get; set; }
+
+    [MaxLength(50)]
+    public string? RoomType { get; set; }
 
     [Required, MaxLength(150)]
     public string GuestName { get; set; } = string.Empty;

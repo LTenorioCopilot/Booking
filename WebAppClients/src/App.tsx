@@ -6,6 +6,8 @@ import { CustomerFormPage } from './pages/CustomerFormPage'
 import { RoomsListPage } from './pages/RoomsListPage'
 import { RoomFormPage } from './pages/RoomFormPage'
 import { Reservations } from './pages/Reservations'
+import { UnassignedReservationsPage } from './pages/UnassignedReservationsPage'
+import { UnassignedReservationFormPage } from './pages/UnassignedReservationFormPage'
 
 function App() {
   return (
@@ -19,6 +21,9 @@ function App() {
         <Route path="/rooms/nuevo" element={<RoomFormPage />} />
         <Route path="/rooms/:id/editar" element={<RoomFormPage />} />
         <Route path="/reservas" element={<Reservations />} />
+        <Route path="/reservas-sin-asignar" element={<UnassignedReservationsPage />} />
+        <Route path="/reservas-sin-asignar/nueva" element={<UnassignedReservationFormPage />} />
+        <Route path="/reservas-sin-asignar/:id/editar" element={<UnassignedReservationFormPage />} />
       </Route>
     </Routes>
   )
