@@ -18,8 +18,11 @@ export function MainLayout() {
           <NavLink to="/" end className={navLinkClass}>
             Inicio
           </NavLink>
-          <NavLink to="/clientes" className={navLinkClass}>
+          <NavLink to="/customers" className={navLinkClass}>
             Clientes
+          </NavLink>
+          <NavLink to="/reservas" className={navLinkClass}>
+            Reservaciones
           </NavLink>
         </nav>
       </aside>

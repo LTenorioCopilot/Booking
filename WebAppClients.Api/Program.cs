@@ -15,7 +15,7 @@ builder.Services.AddControllers()
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddDbContext<ClientesDbContext>(options =>
+builder.Services.AddDbContext<CustomersDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("ClientesDb")));
 
 builder.Services.AddCors(options =>
