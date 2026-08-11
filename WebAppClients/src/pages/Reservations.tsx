@@ -105,6 +105,18 @@ function toBookingInput(draft: Draft) {
     endHour: draft.endHour,
     checkInDate: draft.checkIn,
     checkOutDate: draft.checkOut,
+    dateOfBirth: null,
+    nationality: null,
+    idDocumentType: null,
+    idDocumentNumber: null,
+    address: null,
+    phoneNumber: null,
+    email: null,
+    adultsCount: 1,
+    minorsCount: 0,
+    travelPurpose: null,
+    reservationSource: 'WalkIn',
+    customerId: null,
   }
 }
 

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebAppClients.Api.Data;
 
@@ -11,9 +12,11 @@ using WebAppClients.Api.Data;
 namespace WebAppClients.Api.Migrations
 {
     [DbContext(typeof(CustomersDbContext))]
-    partial class CustomersDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260810225511_AddReservationSourceAndFolio")]
+    partial class AddReservationSourceAndFolio
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -44,9 +47,6 @@ namespace WebAppClients.Api.Migrations
 
                     b.Property<DateOnly>("CheckOutDate")
                         .HasColumnType("date");
-
-                    b.Property<int?>("CustomerId")
-                        .HasColumnType("int");
 
                     b.Property<DateOnly?>("DateOfBirth")
                         .HasColumnType("date");
@@ -117,8 +117,6 @@ namespace WebAppClients.Api.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CustomerId");
-
                     b.HasIndex("RoomId");
 
                     b.ToTable("Booking", (string)null);
@@ -154,10 +152,6 @@ namespace WebAppClients.Api.Migrations
 
                     b.Property<DateOnly>("FechaNacimiento")
                         .HasColumnType("date");
-
-                    b.Property<string>("Nationality")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Nombres")
                         .IsRequired()
@@ -307,11 +301,6 @@ namespace WebAppClients.Api.Migrations
 
             modelBuilder.Entity("WebAppClients.Api.Models.Booking", b =>
                 {
-                    b.HasOne("WebAppClients.Api.Models.Customer", null)
-                        .WithMany()
-                        .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
                     b.HasOne("WebAppClients.Api.Models.Room", null)
                         .WithMany()
                         .HasForeignKey("RoomId")

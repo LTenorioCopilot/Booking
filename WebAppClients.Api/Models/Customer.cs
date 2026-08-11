@@ -21,6 +21,9 @@ public class Customer
     [Required]
     public DateOnly FechaNacimiento { get; set; }
 
+    [MaxLength(100)]
+    public string? Nationality { get; set; }
+
     [Required, EmailAddress, MaxLength(150)]
     public string Email { get; set; } = string.Empty;
 

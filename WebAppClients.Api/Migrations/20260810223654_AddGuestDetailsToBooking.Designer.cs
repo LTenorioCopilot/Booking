@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebAppClients.Api.Data;
 
@@ -11,9 +12,11 @@ using WebAppClients.Api.Data;
 namespace WebAppClients.Api.Migrations
 {
     [DbContext(typeof(CustomersDbContext))]
-    partial class CustomersDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260810223654_AddGuestDetailsToBooking")]
+    partial class AddGuestDetailsToBooking
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -45,9 +48,6 @@ namespace WebAppClients.Api.Migrations
                     b.Property<DateOnly>("CheckOutDate")
                         .HasColumnType("date");
 
-                    b.Property<int?>("CustomerId")
-                        .HasColumnType("int");
-
                     b.Property<DateOnly?>("DateOfBirth")
                         .HasColumnType("date");
 
@@ -57,10 +57,6 @@ namespace WebAppClients.Api.Migrations
 
                     b.Property<double>("EndHour")
                         .HasColumnType("float");
-
-                    b.Property<string>("Folio")
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
 
                     b.Property<string>("GuestName")
                         .IsRequired()
@@ -88,13 +84,6 @@ namespace WebAppClients.Api.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
-                    b.Property<string>("ReservationSource")
-                        .IsRequired()
-                        .ValueGeneratedOnAdd()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)")
-                        .HasDefaultValue("Otro");
-
                     b.Property<string>("RoomId")
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
@@ -116,8 +105,6 @@ namespace WebAppClients.Api.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CustomerId");
 
                     b.HasIndex("RoomId");
 
@@ -154,10 +141,6 @@ namespace WebAppClients.Api.Migrations
 
                     b.Property<DateOnly>("FechaNacimiento")
                         .HasColumnType("date");
-
-                    b.Property<string>("Nationality")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Nombres")
                         .IsRequired()
@@ -239,79 +222,8 @@ namespace WebAppClients.Api.Migrations
                         });
                 });
 
-            modelBuilder.Entity("WebAppClients.Api.Models.Sequence", b =>
-                {
-                    b.Property<string>("Origin")
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
-
-                    b.Property<int>("NextValue")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PadLength")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Prefix")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
-
-                    b.HasKey("Origin");
-
-                    b.ToTable("Sequences", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Origin = "Internet",
-                            NextValue = 1,
-                            PadLength = 6,
-                            Prefix = "IN"
-                        },
-                        new
-                        {
-                            Origin = "Telefono",
-                            NextValue = 1,
-                            PadLength = 6,
-                            Prefix = "TL"
-                        },
-                        new
-                        {
-                            Origin = "WalkIn",
-                            NextValue = 1,
-                            PadLength = 6,
-                            Prefix = "WI"
-                        },
-                        new
-                        {
-                            Origin = "AppMobile",
-                            NextValue = 1,
-                            PadLength = 6,
-                            Prefix = "AP"
-                        },
-                        new
-                        {
-                            Origin = "Agencia",
-                            NextValue = 1,
-                            PadLength = 6,
-                            Prefix = "AG"
-                        },
-                        new
-                        {
-                            Origin = "Otro",
-                            NextValue = 1,
-                            PadLength = 6,
-                            Prefix = "OT"
-                        });
-                });
-
             modelBuilder.Entity("WebAppClients.Api.Models.Booking", b =>
                 {
-                    b.HasOne("WebAppClients.Api.Models.Customer", null)
-                        .WithMany()
-                        .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
                     b.HasOne("WebAppClients.Api.Models.Room", null)
                         .WithMany()
                         .HasForeignKey("RoomId")

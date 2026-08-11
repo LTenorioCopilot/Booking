@@ -7,6 +7,7 @@ export interface Customer {
   documentType: DocumentType
   numeroDocumento: string
   fechaNacimiento: string
+  nationality: string | null
   email: string
   telefono: string
   direccion: string

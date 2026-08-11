@@ -10,6 +10,7 @@ const customerSchema = z.object({
   documentType: z.enum(['DNI', 'Pasaporte', 'CE']),
   numeroDocumento: z.string().min(5, 'Documento inválido').max(20),
   fechaNacimiento: z.string().min(1, 'Requerido'),
+  nationality: z.string().max(100),
   email: z.string().email('Email inválido'),
   telefono: z.string().min(6, 'Teléfono inválido'),
   direccion: z.string().min(5, 'Dirección muy corta'),
@@ -30,21 +31,27 @@ export function CustomerForm({ customerInicial, onSubmit, enviando }: CustomerFo
     formState: { errors },
   } = useForm<CustomerFormValues>({
     resolver: zodResolver(customerSchema),
-    defaultValues: customerInicial ?? {
-      nombres: '',
-      apellidos: '',
-      documentType: 'DNI',
-      numeroDocumento: '',
-      fechaNacimiento: '',
-      email: '',
-      telefono: '',
-      direccion: '',
-    },
+    defaultValues: customerInicial
+      ? { ...customerInicial, nationality: customerInicial.nationality ?? '' }
+      : {
+          nombres: '',
+          apellidos: '',
+          documentType: 'DNI',
+          numeroDocumento: '',
+          fechaNacimiento: '',
+          nationality: '',
+          email: '',
+          telefono: '',
+          direccion: '',
+        },
   })
+
+  const enviar = (valores: CustomerFormValues) =>
+    onSubmit({ ...valores, nationality: valores.nationality || null })
 
   return (
     <form
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={handleSubmit(enviar)}
       className="mx-auto max-w-2xl space-y-5 rounded-xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-800"
     >
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -70,6 +77,10 @@ export function CustomerForm({ customerInicial, onSubmit, enviando }: CustomerFo
 
         <Campo label="Fecha de nacimiento" error={errors.fechaNacimiento?.message}>
           <input type="date" {...register('fechaNacimiento')} className={inputClass} />
+        </Campo>
+
+        <Campo label="Nacionalidad" error={errors.nationality?.message}>
+          <input {...register('nationality')} className={inputClass} />
         </Campo>
 
         <Campo label="Email" error={errors.email?.message}>
